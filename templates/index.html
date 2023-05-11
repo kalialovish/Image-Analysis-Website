@@ -1,0 +1,175 @@
+<html>
+<head>
+{% block heading %}
+<style>
+.button 
+{ display: inline-block;
+padding: 15px 25px;
+font-size: 24px;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+outline: none;
+color: #fff;
+background-color: #4CAF50;
+border: none;
+border-radius: 15px;
+box-shadow: 0 9px #999;
+}
+.button:active 
+{ background-color: #3e8e41;
+box-shadow: 0 5px #666;
+transform: translateY(4px);
+}
+.button:hover 
+{  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);}
+
+/* Add animation to "page content" */
+.animate-bottom {
+position: relative;
+-webkit-animation-name: animatebottom;
+-webkit-animation-duration: 1s;
+animation-name: animatebottom;
+animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+from { bottom:-100px; opacity:0 } 
+to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+from{ bottom:-100px; opacity:0 } 
+to{ bottom:0; opacity:1 }
+}
+
+#myDiv1 {
+display: none;
+text-align: center;
+}
+#selectedFiles img {
+    max-width: 125px;
+    max-height: 125px;
+    float: left;
+    margin-bottom:10px;
+}
+@keyframes example {
+    0%   {color:rgb(241, 175, 175);}
+    25%  {color:rgb(214, 214, 146);}
+    50%  {color:rgb(179, 179, 221);}
+    75%  {color:rgb(140, 214, 140);}
+    100% {color:rgb(241, 175, 175);}
+}
+#myDIV {
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h1 {
+    color: red;
+}
+
+p {
+    font-family: sans-serif;
+    font-size: 18px;
+}
+</style>
+{% endblock %}
+{% block body %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body bgcolor="goldenrod" style="text-decoration:black; background-image: url(../static/blockchain2.png); background-size:contain ; background-repeat: no-repeat; background-position: center;">	
+	<div id=mydiv>
+		<center><h1 style="position: relative; animation-name:example; animation-duration: 4s; animation-iteration-count: 2; animation-direction: alternate-reverse; color:rgb(241, 175, 175); font-size: xxx-large;">WELCOME</h1>
+		<p style="color: aliceblue;">We have a prediction website for you which runs a pre-trained model on input image provided by you. Let's try out.</p></center>
+	</div>
+		<center><label style="color:black;">Please select one to get started</label>
+			<form method="POST">
+			<input type="button" class="button" onclick="my_texted_function()" value="Texted"></button>
+			<input type="button" class="button" onclick="my_vision_function()" value="Vision"></button>
+			</form>
+		</center>
+
+	<div id="text" style="display: none;">
+		<center><h1 style="color: rgb(231, 213, 53); font-size: xxx-large;">TEXTED</h1><img src="../static/text.jfif">
+		<p style="color: white;">Texting is designed to get the sense of what numerss resides in an image. The contents in the image  are decoded and fed to the server. It uses a model to compare the user loaded image and comapres it with the pre-loaded images and returns the result as a text value.</p></center>
+	</div><br>
+	
+	<div id="vision" style="display: none;">
+		<center><h1 style = "color:rgb(0, 119, 255); font-size: xxx-large;">VISION</h1><img src = "../static/vision.jfif">
+		<p style = "color: aliceblue;">Vision is designed to get the sense of what resides in an image. The contents in the image are decoded and fed to the server. It uses a model to compare the user loaded images with the pre-loaded images and returns the result in the form of a table.</p></center>
+	</div>
+
+	<form action ="{{ url_for('index') }}" method="POST" enctype = "multipart/form-data" id = "tag_list" name="tag_list" style = "display: none; position: initial; margin-left: auto;">
+		<center><label style="color: white;">Select an image</label>
+		<div class="custom-file">
+		<input name="tag_name" id = "tag_name">
+		<input type="file" class="custom-file-input" id="image" style="color: aliceblue;" name="image"><input type="submit" value="Send file">
+		</div>
+		<div id = "selectedFiles"></div></center>
+	</form>
+<script>
+var selDiv="";
+document.addEventListener("DOMContentLoaded", init, false);
+function init()
+{   document.querySelector('#image').addEventListener('change',handleFileSelect, false);
+    selDiv = document.querySelector("#selectedFiles");
+}
+function handleFileSelect(e)
+{   selDiv.innerHTML = "";
+    var files = e.target.files;
+    for(var i=0; i<files.length; i++) 
+    {   var f = files[i];
+        var reader = new FileReader();
+        reader.onload = function (e) 
+        {   var html = "<img style=\"align-items: center;\" src=\"" + e.target.result + "\">" + "<br clear=\"left\"/>";
+            selDiv.innerHTML += html;
+        }
+    reader.readAsDataURL(f); 
+    selDiv.innerHTML += f.name + "<br/>"; 
+    }
+}
+
+function my_texted_function()
+{
+    var x =document.getElementById("text");
+    var y = document.getElementById("tag_list");
+    if (x.style.display === "none")
+    {	x.style.display = "block";
+        y.style.display ="block";
+        document.getElementById("vision").style.display = "none";
+        document.getElementById("mydiv").style.display = "none";
+        document.getElementById("tag_name").value='Texted';
+    } else {	x.style.display = "none";
+                y.style.display = "none";
+                document.getElementById("tag_name").value ="Vision";
+            }
+}
+
+function my_vision_function()
+{
+    var x = document.getElementById("vision");
+    var y = document.getElementById("tag_list");
+    if (x.style.display === "none")
+    {	x.style.display = "block";
+        y.style.display = "block";
+        document.getElementById("text").style.display = "none";
+        document.getElementById("mydiv").style.display = "none";
+        document.getElementById("tag_name").value='Vision';
+    } else {x.style.display = "none";
+            y.style.display = "none";
+            document.getElementById("tag_name").value = "Texted";
+            }
+}
+</script>
+	<h1 style="color: black;">{{ text_output }}</h1>
+    
+    {% for name in names %}
+        {{name|safe}}
+	{% endfor %}
+</body>
+{% endblock %}
+</html>

@@ -1,0 +1,9 @@
+This is a simple image analysis project. It uses Python at the backend and HTML, CSS and JS for the frontend.
+
+To run the project, navigate to project folder and open terminal in that window and type: 
+
+$ flask run
+
+Open a browser and open the url:
+
+http://127.0.0.1:5000/
